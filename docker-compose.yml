@@ -1,0 +1,32 @@
+version: '3'
+services:
+  frontend:
+    image: compendium-frontend
+    container_name: compendium-frontend
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+
+  backend:
+    image: compendium-backend
+    container_name: compendium-backend
+    depends_on:
+      - compendium_db
+    environment:
+      - DB_HOST=compendium_db
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=compendium_base
+
+  compendium_db:
+    image: mysql:9
+    container_name: compendium_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=compendium_base
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:

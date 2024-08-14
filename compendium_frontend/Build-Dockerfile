@@ -1,0 +1,29 @@
+# Bun runtime base 
+FROM oven/bun:latest AS base
+WORKDIR /app
+
+# cache dependencies
+FROM base AS install
+RUN mkdir -p /temp/dev
+COPY package.json bun.lockb /temp/dev/
+RUN cd /temp/dev && bun install --frozen-lockfile
+
+# install
+RUN mkdir -p /temp/prod
+COPY package.json bun.lockb /temp/prod/
+RUN cd /temp/prod && bun install --frozen-lockfile --production
+
+# Copy modules from temp
+FROM base AS prerelease
+COPY --from=install /temp/dev/node_modules node_modules
+COPY . .
+RUN echo | bun -v
+RUN bun x react-scripts build
+
+
+# copy to final img and serve
+FROM nginx:alpine AS release
+ENV NODE_ENV=production
+COPY --from=prerelease /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD [ "nginx", "-g", "daemon off;" ]

@@ -1,0 +1,18 @@
+Stack:
+    Front-end: React.js
+        - possible material UI?
+    Back-end: Node.js with Express
+    Database: MySQL 
+    Containerization: Docker
+
+Basic Project Structure:
+
+    Frontend:
+        React components: For the grid, tabs, and image previews.
+        State management: Using Context API or a state management library like Redux.
+        Routing: React Router for managing different tabs and views.
+
+    Backend:
+        API Endpoints: To handle CRUD operations for image links and user data.
+        Authentication: JWT or session-based authentication.
+        Database Interaction: Using Mongoose (if MongoDB) or an ORM like Sequelize (if SQL).
