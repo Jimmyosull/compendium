@@ -1,0 +1,36 @@
+@import url("../colors.css");
+@import url("../index.css");
+
+.bar {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    display: flex;
+}
+
+
+.addButton {
+    background-color: var(--blue);
+}
+
+.button:hover {
+    animation: darken 250ms forwards;
+}
+
+.leftPad {
+    flex: 1;
+}
+
+
+.searchBar {
+    background-color: var(--overlay2);
+    margin: 4px;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+}
+
+@keyframes darken {
+    0% {filter: brightness(100%)}
+    100% {filter: brightness(85%);}
+}

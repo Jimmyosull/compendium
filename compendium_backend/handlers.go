@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"image"
 	"image/png"
 	"net/http"
@@ -65,7 +66,7 @@ func updatePostHandler(logger *Logger, app *App) http.Handler {
 		}
 
 		// todo: verify this works, error checking
-		app.db.Model(&post).Updates(post)
+		app.db.Save(&post)
 
 		post.ID = id
 		json.NewEncoder(w).Encode(post)
@@ -82,6 +83,14 @@ func deletePostHandler(logger *Logger, app *App) http.Handler {
 			return
 		}
 		app.db.Delete(&Post{}, id)
+
+		imgPath := "/images/" + idStr + ".png"
+		if _, err := os.Stat(imgPath); err == nil {
+			err = os.Remove(imgPath)
+			if err != nil {
+				fmt.Printf("Unable to remove %s with error %s", imgPath, err.Error())
+			}
+		}
 		w.WriteHeader(http.StatusNoContent)
 	})
 }
@@ -91,9 +100,9 @@ func getAllPostsHandler(logger *Logger, app *App) http.Handler {
 		var posts []Post
 		app.db.Find(&posts)
 
-		for _, val := range posts {
-			json.NewEncoder(w).Encode(val)
-		}
+		w.Header().Set("Content-Type", "application/json")
+
+		json.NewEncoder(w).Encode(posts)
 	})
 }
 
@@ -109,6 +118,10 @@ func getImageHandler(logger *Logger, app *App, img_folder string) http.Handler {
 func updateImageHandler(Logger *Logger, app *App, img_folder string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		idStr := r.URL.Query().Get("id")
+		if idStr == "" {
+			http.Error(w, "No id string!", http.StatusBadRequest)
+			return
+		}
 
 		err := r.ParseMultipartForm(32 << 20)
 		if err != nil {

@@ -1,32 +1,51 @@
 version: '3'
 services:
-  frontend:
+  compendium-frontend:
     image: compendium-frontend
     container_name: compendium-frontend
     ports:
       - 80:80
     depends_on:
-      - backend
+      - compendium-backend
+    networks:
+      - compendium_net
 
-  backend:
+  compendium-backend:
     image: compendium-backend
     container_name: compendium-backend
     depends_on:
       - compendium_db
     environment:
-      - DB_HOST=compendium_db
-      - DB_USER=root
-      - DB_PASSWORD=rootpassword
-      - DB_NAME=compendium_base
+      DB_HOST: compendium_db
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PW: rootpassword
+      DB_NAME: posts
+      PORT: 8001
+    networks:
+      - compendium_net
+    restart: unless-stopped
+    # this can be removed for prod
+    ports:
+      - 8001:8001
+    volumes:
+      - ./images:/images
 
   compendium_db:
     image: mysql:9
     container_name: compendium_db
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=compendium_base
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: posts
     volumes:
       - db-data:/var/lib/mysql
+    networks:
+      - compendium_net
 
 volumes:
   db-data:
+
+networks:
+  compendium_net:
+    driver: bridge

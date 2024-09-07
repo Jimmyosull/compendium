@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import './Navbar.css'
 
 function Navbar() {
   const location = useLocation();
@@ -13,22 +13,12 @@ function Navbar() {
   }
 
   return (
-    <AppBar position='static'>
-      <Toolbar>
-        <Typography variant='h6' style={{flexGrow: 1}}>
-          {loc}
-        </Typography>
-        <Button color='inherit' component={Link} to="/">
-          Home
-        </Button>
-        <Button color='inherit' component={Link} to="/collection">
-          Collection
-        </Button>
-        <Button color='inherit' component={Link} to="/settings">
-          Settings
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <div position='static' className='navBarContainer'>
+      <div className='currentLocation'>{loc}</div>
+      <Link className='navLink' to="/">Home</Link>
+      <Link className='navLink' to="/collection">Collection</Link>
+      <Link className='navLink' to="/settings">Settings</Link>
+    </div>
   )
 }
 

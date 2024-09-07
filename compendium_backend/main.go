@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
-	"net"
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
+	"github.com/rs/cors"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -60,25 +61,31 @@ func createTables(db *gorm.DB) {
 func main() {
 	app := NewApp()
 
-	mux := http.NewServeMux()
-	addRoutes(mux, app, &Logger{})
+	r := mux.NewRouter()
 
-	var handler http.Handler = mux
+	addRoutes(r, app, &Logger{})
 
-	host := "0.0.0.0"
-	port := os.Getenv("PORT")
-	httpServer := &http.Server{
-		Addr:    net.JoinHostPort(host, port),
-		Handler: handler,
-	}
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"localhost", "compendium-*"},
+		AllowedMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions, http.MethodConnect},
+		AllowedHeaders: []string{"Content-Type", "priority", "user-agent",
+			"X-Requested-With", "X-Auth-Token", "Content-Length", "Authorization",
+			"Access-Control-Allow-Headers", "Accept", "Access-Control-Allow-Methods",
+			"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"},
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
+		AllowCredentials: true,
+	})
+
+	handler := c.Handler(r)
 
 	fmt.Println(&app.db)
 	// create tables if do not exist
 	createTables(app.db)
 
-	fmt.Printf("Starting listening on %s", httpServer.Addr)
-
-	if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+	port := os.Getenv("PORT")
+	if err := http.ListenAndServe(":"+port, handler); err != nil && err != http.ErrServerClosed {
 		fmt.Fprintf(os.Stderr, "error listening and serving: %s\n", err)
 	}
 }

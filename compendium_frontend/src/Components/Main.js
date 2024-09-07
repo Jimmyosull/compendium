@@ -11,7 +11,9 @@ function Main() {
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path='/collection' element={<Collection />} />
+      {/* TODO: fix CORS */}
+      <Route path='/collection' element={<Collection db_url="http://localhost:8001" />} />
+      {/* <Route path='/collection' element={<Collection db_url="http://compendium-backend:8001" />} /> */}
       <Route path='/settings' element={<Settings />} />
       <Route path='*' element={<NoPage />} />
     </Routes>

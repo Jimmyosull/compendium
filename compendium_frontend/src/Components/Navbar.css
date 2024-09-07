@@ -1,0 +1,32 @@
+@import url("../colors.css");
+@import url("../index.css");
+
+.navBarContainer {
+    background: var(--overlay0);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 50px;
+}
+
+.currentLocation {
+    flex: 1;
+    padding: 14px;
+    color: var(--text);
+}
+
+.navLink {
+    display: flex;
+    padding: 14px;
+    margin: 7px;
+    color: var(--text);
+    text-align: center;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.navLink:hover {
+    background-color: var(--overlay1);
+    color: var(--blue);
+}

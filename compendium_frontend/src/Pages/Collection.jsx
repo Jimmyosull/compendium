@@ -1,41 +1,44 @@
-import { useState } from 'react';
-import {Grid, Container } from '@mui/material';
+import { useEffect, useState } from 'react';
+import ImgGrid from '../Components/imgGrid';
+import CollectionTopbar from '../Components/collection-topbar';
+import AddOverlay from '../Components/AddOverlay';
 
-const images = [
-  // Sample image data; replace with your data source
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
-  { src: 'https://via.placeholder.com/150', category: 'Category 1' },
 
-];
 
-function Collection() {
-  const [value, setValue] = useState(0);
+const Collection = ({db_url}) => {
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const [isOverlayVisible, setOverlayVisible] = useState(false)
+  const [posts, setPosts] = useState([]);
+
+  const handleAddClick = () => {setOverlayVisible(true)}
+  const closeAddOverlay = () => {setOverlayVisible(false)}
+
+  const fetchPosts = () => {
+    fetch(db_url + '/api/v1/all')
+    .then(response => {
+      if (!response.ok) {
+        console.log("Failed to get all elements!")
+      }
+      return response.json();
+    })
+    .then(data => {
+      setPosts(data)
+    })
+    .catch(error => {
+      console.error('There was a problem with the fetch:', error)
+    })
   };
 
-  const renderGrid = (category) => (
-    <Container sx={{p: 3}}>
-      <Grid container spacing={3}>
-        {images
-          .filter((image) => image.category === category)
-          .map((image, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-              <img src={image.src} alt={`img-${index}`} style={{ width: '100%' }} />
-            </Grid>
-          ))}
-      </Grid>
-    </Container>
-   
-  );
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
-  return ( <> {renderGrid('Category 1')} </> );
+  return (
+    <div>
+      {isOverlayVisible && <AddOverlay closeAddOverlay={closeAddOverlay} reloadPosts={fetchPosts}/>}
+      <CollectionTopbar handleAddClick={handleAddClick}/>
+      <ImgGrid postArray={posts} db_url={db_url}/>
+    </div> );
 }
 
 export default Collection;

@@ -1,0 +1,29 @@
+@import url("../colors.css");
+@import url("../index.css");
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 10;
+}
+
+.inputArea {
+    position: relative;
+    margin: 25%;
+    width: 50%;
+    padding: 10px;
+    background-color: var(--overlay2);
+}
+
+
+.input {
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
