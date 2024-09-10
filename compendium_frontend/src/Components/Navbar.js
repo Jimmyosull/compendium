@@ -16,7 +16,6 @@ function Navbar() {
     <div position='static' className='navBarContainer'>
       <div className='currentLocation'>{loc}</div>
       <Link className='navLink' to="/">Home</Link>
-      <Link className='navLink' to="/collection">Collection</Link>
       <Link className='navLink' to="/settings">Settings</Link>
     </div>
   )

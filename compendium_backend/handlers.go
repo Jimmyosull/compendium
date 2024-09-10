@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"image"
+	"image/jpeg"
 	"image/png"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 // TODO: tags
@@ -129,7 +132,7 @@ func updateImageHandler(Logger *Logger, app *App, img_folder string) http.Handle
 			return
 		}
 
-		file, _, err := r.FormFile("image")
+		file, handler, err := r.FormFile("image")
 		if err != nil {
 			http.Error(w, "Error retrieving file!", http.StatusInternalServerError)
 			return
@@ -137,13 +140,23 @@ func updateImageHandler(Logger *Logger, app *App, img_folder string) http.Handle
 		defer file.Close()
 
 		// todo: check if img is valid
-		img, _, err := image.Decode(file)
+		ext := strings.ToLower(filepath.Ext(handler.Filename))
+		var img image.Image
+		switch ext {
+		case ".png":
+			img, err = png.Decode(file)
+		case ".jpg", ".jpeg":
+			img, err = jpeg.Decode(file)
+		default:
+			http.Error(w, "Unsupported file format"+ext, http.StatusBadRequest)
+		}
+
 		if err != nil {
-			http.Error(w, "Error decoding PNG image!", http.StatusInternalServerError)
+			http.Error(w, "Error decoding image!", http.StatusInternalServerError)
 		}
 
 		savePath := img_folder + "/" + idStr + ".png"
-		output, err := os.Create(savePath)
+		output, err := os.OpenFile(savePath, os.O_CREATE|os.O_RDWR, 0644)
 		if err != nil {
 			http.Error(w, "Error saving the file!", http.StatusInternalServerError)
 			return

@@ -1,0 +1,51 @@
+
+.editBtn {
+    display: none;
+    position: absolute;
+    bottom: 5px;
+    right: 3px;
+    background-color: color-mix(in srgb, var(--overlay0) 50%, transparent);
+    padding: 7px 10px;
+    border-radius: 15px;
+    text-align: center;
+    align-items: center;
+    font-size: small;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.editBtn:hover .menuBox {
+    display: grid;
+}
+
+.menuBox {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(10px, 0px);
+    justify-content: center;
+    justify-items: center;
+    text-align: center;
+    margin-bottom: 25px;
+    background-color: color-mix(in srgb, var(--overlay0) 90%, transparent);
+    z-index: 1;
+}
+
+.menuItem {
+    list-style-type: none;
+    text-align: center;
+    justify-content: center;
+    padding: 5px;
+    border: 1px;
+    border-color: color-mix(in srgb, var(--mantle) 70%, transparent);
+    border-style: ridge;
+    width: 100%;
+    height: auto;
+    z-index: 1;
+    color: var(--text);
+}
+
+.deleteItem {
+    background-color: var(--red);
+}

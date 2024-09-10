@@ -1,5 +1,7 @@
 import { useState } from "react";
-import "./addOverlay.css"
+import "./overlay.css"
+import ImgSelector from "./ImgSelector";
+
 
 const AddOverlay = ({closeAddOverlay, reloadPosts}) => {
   const [inputName, setInputName] = useState('')
@@ -8,7 +10,6 @@ const AddOverlay = ({closeAddOverlay, reloadPosts}) => {
 
   const handleNameChange = (e) => {setInputName(e.target.value)}
   const handleLinkChange = (e) => {setInputLink(e.target.value)}
-  const handleFileChange = (e) => {setSelectedFile(e.target.files[0])}
 
   const addToDB = async () => {
     let payload = {'name': inputName, 'link': inputLink}
@@ -17,7 +18,6 @@ const AddOverlay = ({closeAddOverlay, reloadPosts}) => {
       reloadPosts();
       return;
     }
-
     // send data
     const response = await fetch('http://localhost:8001/api/v1/create', {
       method: 'POST',
@@ -43,12 +43,9 @@ const AddOverlay = ({closeAddOverlay, reloadPosts}) => {
       setSelectedFile(null)
     }
     
-
-    
     closeAddOverlay();
     reloadPosts();
   }
-
 
 
   return(
@@ -61,17 +58,15 @@ const AddOverlay = ({closeAddOverlay, reloadPosts}) => {
         <p className="input">
           Link: <input type="text" value={inputLink} placeholder="Link" onChange={handleLinkChange}></input><br/>
         </p>
-        <p>
-          Image: <input type="file" onChange={handleFileChange} accept="image/png"></input>
-        </p>
+        <ImgSelector onFileChange={setSelectedFile}/>
         <div style={{display: "flex"}}>
           <div className="button" onClick={addToDB} style={{flex: .5}}>Add item</div>
           <div onClick={closeAddOverlay} className="button" style={{flex: .5}}>Close!</div>
         </div>
-  
       </div>
     </div>
   )
 };
+
 
 export default AddOverlay

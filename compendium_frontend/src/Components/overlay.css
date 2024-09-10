@@ -15,8 +15,9 @@
 
 .inputArea {
     position: relative;
-    margin: 25%;
-    width: 50%;
+    margin: 20%;
+    width: 60%;
+    height: 60%;
     padding: 10px;
     background-color: var(--overlay2);
 }

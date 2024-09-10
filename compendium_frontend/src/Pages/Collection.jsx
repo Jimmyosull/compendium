@@ -2,16 +2,21 @@ import { useEffect, useState } from 'react';
 import ImgGrid from '../Components/imgGrid';
 import CollectionTopbar from '../Components/collection-topbar';
 import AddOverlay from '../Components/AddOverlay';
+import EditOverlay from '../Components/EditOverlay';
 
 
 
 const Collection = ({db_url}) => {
 
-  const [isOverlayVisible, setOverlayVisible] = useState(false)
+  const [isAddOverlayVisible, setAddOverlayVisible] = useState(false)
+  const [editedPost, setEditedPost] = useState(null)
   const [posts, setPosts] = useState([]);
 
-  const handleAddClick = () => {setOverlayVisible(true)}
-  const closeAddOverlay = () => {setOverlayVisible(false)}
+  const handleAddClick = () => {setAddOverlayVisible(true)}
+  const closeAddOverlay = () => {setAddOverlayVisible(false)}
+
+  const editPost = (post) => {setEditedPost(post)}
+  const closeEditOverlay = () => {setEditedPost(null)}
 
   const fetchPosts = () => {
     fetch(db_url + '/api/v1/all')
@@ -35,10 +40,11 @@ const Collection = ({db_url}) => {
 
   return (
     <div>
-      {isOverlayVisible && <AddOverlay closeAddOverlay={closeAddOverlay} reloadPosts={fetchPosts}/>}
+      {isAddOverlayVisible && <AddOverlay closeAddOverlay={closeAddOverlay} reloadPosts={fetchPosts}/>}
+      {editedPost && <EditOverlay post={editedPost} closeEditOverlay={closeEditOverlay} reloadPosts={fetchPosts}/>}
       <CollectionTopbar handleAddClick={handleAddClick}/>
-      <ImgGrid postArray={posts} db_url={db_url}/>
-    </div> );
+      <ImgGrid postArray={posts} db_url={db_url} reloadPosts={fetchPosts} handleEditClick={editPost}/>
+    </div>);
 }
 
 export default Collection;

@@ -1,24 +1,25 @@
 @import url("../colors.css");
 @import url("../index.css");
+@import url("./EditBtn.css");
 
 .gridContainer {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
+    margin: 20px;
 }
 
 .gridItem {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
     border-radius: 8px;
     z-index: 0;
 }
 
 .gridImg  {
     width: 100%;
-    height: 100%;
+    height: minmax(100%, 200px);
 }
 
 .textStyle {
@@ -52,6 +53,8 @@
 
 .imageWrapper {
     position: relative;
+    height: 100%;
+    width: 100%;
 }
 
 .gridItem:hover .shade {
@@ -61,6 +64,19 @@
 .gridItem:hover .textStyle {
     display: block;
     animation: fadeIn 250ms;
+}
+
+.gridItem:hover .editBtn {
+    display: block;
+}
+
+.postLink {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
 }
 
 @keyframes fadeIn {

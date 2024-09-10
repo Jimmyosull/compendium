@@ -1,6 +1,7 @@
 import "./imgGrid.css"
+import EditBtn from "./EditBtn";
 
-const ImgGrid = ({postArray, db_url}) => {
+const ImgGrid = ({postArray, db_url, reloadPosts, handleEditClick}) => {
 
   if (!Array.isArray(postArray)) {
       return(
@@ -13,7 +14,10 @@ const ImgGrid = ({postArray, db_url}) => {
       <div key={item.id} className="gridItem">
         <div className="imageWrapper">
           <p className="textStyle">{item.name}</p>
+          <div className="editBtn">...</div>
+          <a href={item.link} className="postLink" draggable="false" target="_blank"></a>
           <div className="shade"></div>
+          <EditBtn post={item} reloadPosts={reloadPosts} handleEditClick={handleEditClick}/>
           <img src={db_url + "/api/v1/imageGet?id=" + item.id} alt={item.name}
                 className="gridImg"/>
         </div>
